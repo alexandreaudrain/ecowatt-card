@@ -5,27 +5,18 @@ import { HomeAssistant, fireEvent, LovelaceCardEditor } from 'custom-card-helper
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { EcoWattCardConfig } from './types';
 import { customElement, property, state } from 'lit/decorators.js';
-import { formfieldDefinition } from '../elements/formfield';
-import { selectDefinition } from '../elements/select';
-import { switchDefinition } from '../elements/switch';
-import { textfieldDefinition } from '../elements/textfield';
+//import { formfieldDefinition } from '../elements/formfield';
+//import { selectDefinition } from '../elements/select';
+//import { switchDefinition } from '../elements/switch';
+//import { textfieldDefinition } from '../elements/textfield';
 
 @customElement('ecowatt-card-editor')
 export class EcoWattCardEditor extends ScopedRegistryHost(LitElement) implements LovelaceCardEditor {
   @property({ attribute: false }) public hass?: HomeAssistant;
-
   @state() private _config?: EcoWattCardConfig;
-
   @state() private _helpers?: any;
 
   private _initialized = false;
-
-  static elementDefinitions = {
-    ...textfieldDefinition,
-    ...selectDefinition,
-    ...switchDefinition,
-    ...formfieldDefinition,
-  };
 
   public setConfig(config: EcoWattCardConfig): void {
     this._config = config;
@@ -47,14 +38,6 @@ export class EcoWattCardEditor extends ScopedRegistryHost(LitElement) implements
 
   get _entity(): string {
     return this._config?.entity || '';
-  }
-
-  get _show_warning(): boolean {
-    return this._config?.show_warning || false;
-  }
-
-  get _show_error(): boolean {
-    return this._config?.show_error || false;
   }
 
   protected render(): TemplateResult | void {
@@ -85,20 +68,6 @@ export class EcoWattCardEditor extends ScopedRegistryHost(LitElement) implements
         .configValue=${'name'}
         @input=${this._valueChanged}
       ></mwc-textfield>
-      <mwc-formfield .label=${`Toggle warning ${this._show_warning ? 'off' : 'on'}`}>
-        <mwc-switch
-          .checked=${this._show_warning !== false}
-          .configValue=${'show_warning'}
-          @change=${this._valueChanged}
-        ></mwc-switch>
-      </mwc-formfield>
-      <mwc-formfield .label=${`Toggle error ${this._show_error ? 'off' : 'on'}`}>
-        <mwc-switch
-          .checked=${this._show_error !== false}
-          .configValue=${'show_error'}
-          @change=${this._valueChanged}
-        ></mwc-switch>
-      </mwc-formfield>
     `;
   }
 

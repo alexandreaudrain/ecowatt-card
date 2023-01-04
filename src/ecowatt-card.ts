@@ -15,6 +15,7 @@ import { CARD_VERSION } from './const';
 import { localize } from './localize/localize';
 
 import { styles } from './styles';
+import './editor'
 
 /* eslint no-console: 0 */
 console.info(
@@ -34,8 +35,7 @@ console.info(
 // Name your custom element
 @customElement('ecowatt-card')
 export class EcoWattCard extends LitElement {
-  public static async getConfigElement(): Promise<LovelaceCardEditor> {
-    await import('./editor');
+  public static getConfigElement() {
     return document.createElement('ecowatt-card-editor');
   }
 
@@ -78,17 +78,6 @@ export class EcoWattCard extends LitElement {
 
   // https://lit.dev/docs/components/rendering/
   protected render(): TemplateResult | void {
-    /*
-    if (this.config.show_warning) {
-      return this._showWarning(localize('common.show_warning'));
-    }
-
-    if (this.config.show_error) {
-      return this._showError(localize('common.show_error'));
-    }
-    */
-    this.setData();
-    
     if (! this.config.entity)
       return html`
       <ha-card
@@ -97,6 +86,43 @@ export class EcoWattCard extends LitElement {
         .label=${`EcoWatt: No Entity Defined`}
       ></ha-card>
     `;
+    
+    if (this.hass) {
+      const state = this.hass.states[this.config.entity];
+      if (! state) {
+        return html`
+          <ha-card
+            .header=${this.config.name}
+            tabindex="0"
+            .label=${`EcoWatt: Error`}
+          ><div class="ecowatt-error">No state found</div>
+          </ha-card>
+        `
+      }
+      if (! state.attributes) {
+        return html`
+          <ha-card
+            .header=${this.config.name}
+            tabindex="0"
+            .label=${`EcoWatt: Error`}
+          ><div class="ecowatt-error">No attribute found</div>
+          </ha-card>
+        `
+      }
+      if (! state.attributes.signals) {
+        return html`
+          <ha-card
+            .header=${this.config.name}
+            tabindex="0"
+            .label=${`EcoWatt: Error`}
+          ><div class="ecowatt-error">No EcoWatt data found</div>
+          </ha-card>
+        `
+      }
+    }
+
+
+    this.setData();
 
     return html`
       <ha-card
