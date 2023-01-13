@@ -1,7 +1,6 @@
-import { html } from 'lit';
+import { css } from 'lit';
 
-export const styles = html`
-  <style>
+export const styles = css`
     .days-container {
       display: flex;
       width: 90%;
@@ -24,23 +23,14 @@ export const styles = html`
     .focus {
       font-size: 1.5em;
     }
-    /*
-    @keyframes onClick {
-      from {
-      }
-      to {
-        font-size: 1.5em;
-      }
-    }
-    */
     .dayLevel1 {
-      background-color: #02f0c6;
+      background-color: var(--color1, #02f0c6);
     }
     .dayLevel2 {
-      background-color: #f2790f;
+      background-color: var(--color2, #f2790f);
     }
     .dayLevel3 {
-      background-color: #e63946;
+      background-color: var(--color3, #e63946);
     }
 
     .status-container {
@@ -78,13 +68,13 @@ export const styles = html`
       flex: 1 1 0%;
     }
     .hourLevel1 {
-      background-color: #02f0c6;
+      background-color: var(--color1, #02f0c6);
     }
     .hourLevel2 {
-      background-color: #f2790f;
+      background-color: var(--color2, #f2790f);
     }
     .hourLevel3 {
-      background-color: #e63946;
+      background-color: var(--color3, #e63946);
     }
     .hourLabel {
       position: absolute;
@@ -96,7 +86,12 @@ export const styles = html`
       /* n'affiche qu'une heure sur deux */
       display: none;
     }
-  </style>
+
+    .ecowatt-error {
+      background-color: red;
+      color: white;
+      padding: 10px;
+    }
 `;
 
 export default styles;

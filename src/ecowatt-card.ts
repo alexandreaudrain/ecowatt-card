@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { LitElement, html, TemplateResult, css, PropertyValues, CSSResultGroup } from 'lit';
+import { LitElement, html, TemplateResult, PropertyValues, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import {
   HomeAssistant,
   hasConfigOrEntityChanged,
-  ActionHandlerEvent,
-  handleAction,
-  LovelaceCardEditor,
   getLovelace,
 } from 'custom-card-helpers'; // This is a community maintained npm module with common helper functions/types. https://github.com/custom-cards/custom-card-helpers
 
@@ -40,7 +37,7 @@ export class EcoWattCard extends LitElement {
   }
 
   public static getStubConfig(): Record<string, unknown> {
-    return {};
+    return { name: 'EcoWatt' };
   }
 
   // TODO Add any properties that should cause your element to re-render here
@@ -62,7 +59,6 @@ export class EcoWattCard extends LitElement {
     }
 
     this.config = {
-      name: 'EcoWatt',
       ...config,
     };
   }
@@ -79,45 +75,18 @@ export class EcoWattCard extends LitElement {
   // https://lit.dev/docs/components/rendering/
   protected render(): TemplateResult | void {
     if (! this.config.entity)
-      return html`
-      <ha-card
-        .header=${this.config.name}
-        tabindex="0"
-        .label=${`EcoWatt: No Entity Defined`}
-      ></ha-card>
-    `;
+      return this._showError('Entity required');
     
     if (this.hass) {
       const state = this.hass.states[this.config.entity];
       if (! state) {
-        return html`
-          <ha-card
-            .header=${this.config.name}
-            tabindex="0"
-            .label=${`EcoWatt: Error`}
-          ><div class="ecowatt-error">No state found</div>
-          </ha-card>
-        `
+        return this._showError('No state found');
       }
       if (! state.attributes) {
-        return html`
-          <ha-card
-            .header=${this.config.name}
-            tabindex="0"
-            .label=${`EcoWatt: Error`}
-          ><div class="ecowatt-error">No attribute found</div>
-          </ha-card>
-        `
+        return this._showError('No attribute found');
       }
       if (! state.attributes.signals) {
-        return html`
-          <ha-card
-            .header=${this.config.name}
-            tabindex="0"
-            .label=${`EcoWatt: Error`}
-          ><div class="ecowatt-error">No EcoWatt data found</div>
-          </ha-card>
-        `
+        return this._showError('No EcoWatt data found');
       }
     }
 
@@ -128,16 +97,26 @@ export class EcoWattCard extends LitElement {
       <ha-card
         .header=${this.config.name}
         tabindex="0"
-        .label=${`EcoWatt: ${this.config.entity || 'No Entity Defined'}`}
       >
+        ${this._renderSpacer()}
         ${this._renderDays()}
         <div class="status-container">
           ${this._renderStatus()}
           ${this._renderHours()}
         </div>
+        ${this._renderStyle()}
       </ha-card>
-      ${styles}
     `;
+  }
+
+  static styles = styles;
+
+  
+  private _renderSpacer(): TemplateResult {
+    if (this.config.name)
+      return html``;
+    else
+      return html`<div style='padding-top: 10px;'></div>`;
   }
 
   private _renderDays(): TemplateResult {
@@ -151,13 +130,13 @@ export class EcoWattCard extends LitElement {
         <div class="day-container" @click=${() => this.selectedDay = 2}><div class="day ${'dayLevel' + data.days[2].level} ${sd == 2 ? 'focus' : ''}">${data.days[2].strDay}</div></div>
         <div class="day-container" @click=${() => this.selectedDay = 3}><div class="day ${'dayLevel' + data.days[3].level} ${sd == 3 ? 'focus' : ''}">${data.days[3].strDay}</div></div>
       </div>
-    `
+    `;
   }
 
   private _renderStatus(): TemplateResult {
     return html`
       <div class="status">${this.config.data.days[this.selectedDay].message}</div>
-    `
+    `;
   }
 
   private _renderHours(): TemplateResult {
@@ -171,6 +150,23 @@ export class EcoWattCard extends LitElement {
         ${th}
       </div>
     `;
+  }
+
+  private _renderStyle(): TemplateResult {
+    let host = '';
+
+    host += this.config.color1 ? '--color1: ' + this.config.color1 + ';' : '';
+    host += this.config.color2 ? '--color2: ' + this.config.color2 + ';' : '';
+    host += this.config.color3 ? '--color3: ' + this.config.color3 + ';' : '';
+
+    if (host != '')
+      return html`
+        <style>
+          ${':host {' + host + '}'}
+        </style>
+      `;
+    else
+      return html``;
   }
 
   private setData() {
@@ -212,29 +208,13 @@ export class EcoWattCard extends LitElement {
   }
 
 
-  private _handleAction(ev: ActionHandlerEvent): void {
-    if (this.hass && this.config && ev.detail.action) {
-      handleAction(this, this.hass, this.config, ev.detail.action);
-    }
-  }
-
-  private _showWarning(warning: string): TemplateResult {
-    return html` <hui-warning>${warning}</hui-warning> `;
-  }
-
   private _showError(error: string): TemplateResult {
-    const errorCard = document.createElement('hui-error-card');
-    errorCard.setConfig({
-      type: 'error',
-      error,
-      origConfig: this.config,
-    });
-
-    return html` ${errorCard} `;
+    return html`
+    <ha-card tabindex="0">
+      <div class="ecowatt-error">${error}</div>
+    </ha-card>
+    ${styles}
+    `
   }
 
-  // https://lit.dev/docs/components/styles/
-  static get styles(): CSSResultGroup {
-    return css``;
-  }
 }
