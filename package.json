@@ -1,6 +1,6 @@
 {
   "name": "ecowatt-card",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Lovelace EcoWatt Card",
   "keywords": [
     "home-assistant",
