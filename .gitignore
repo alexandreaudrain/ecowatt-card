@@ -2,3 +2,5 @@ node_modules
 .devcontainer
 .github
 .vscode
+ecowatt-card
+*.lock

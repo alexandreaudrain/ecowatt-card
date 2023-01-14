@@ -5,6 +5,8 @@ This documentation will be in French.
 
 Pour obtenir des informations sur EcoWatt, veuillez visiter le site https://www.monecowatt.fr/.
 
+![EcoWatt Card](documentation/ecowatt-card.jpg)
+
 ## Installation
 
 Utilisez [HACS](https://hacs.xyz/) [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/alexandreaudrain/ecowatt-card)
