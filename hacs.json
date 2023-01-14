@@ -1,5 +1,5 @@
 {
     "name": "EcoWatt Card",
-    "content_in_root": false,
-    "render_readme": true
+    "render_readme": true,
+    "filename": "ecowatt-card.js"
 }
