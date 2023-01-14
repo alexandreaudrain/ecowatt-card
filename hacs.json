@@ -1,6 +1,5 @@
 {
     "name": "EcoWatt Card",
     "content_in_root": false,
-    "render_readme": true,
-    "country": "FR"
+    "render_readme": true
 }
