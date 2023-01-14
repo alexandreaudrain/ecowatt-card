@@ -1,6 +1,7 @@
 {
     "name": "EcoWatt Card",
+    "content_in_root": false,
+    "filename": "ecowatt-card.js",
     "render_readme": true,
-    "country": "FR",
-    "filename": "ecowatt-card.js"
+    "country": "FR"
 }

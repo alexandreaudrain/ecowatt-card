@@ -3,4 +3,5 @@ node_modules
 .github
 .vscode
 ecowatt-card
+package-lock.json
 *.lock

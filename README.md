@@ -1,7 +1,7 @@
 # EcoWatt-card pour Home Assistant
 
 EcoWatt is a solution for electricity monitoring in France.
-This documentation will be in French.
+This documentation will be in french.
 
 Pour obtenir des informations sur EcoWatt, veuillez visiter le site https://www.monecowatt.fr/.
 
