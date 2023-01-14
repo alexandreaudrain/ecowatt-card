@@ -33,7 +33,7 @@ const plugins = [
 
 export default [
   {
-    input: 'src/ecowatt-card.ts',
+    input: 'custom_components/ecowatt-card/ecowatt-card.ts',
     output: {
       file: 'dist/ecowatt-card.js',
       format: 'es',
